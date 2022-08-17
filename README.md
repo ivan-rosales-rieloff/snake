@@ -1,2 +1,2 @@
 # dcalc
-Rust WASM Damage Calculation
+Rust WASM calculator
