@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>hello-wasm example</title>
+    <script type="module">
+        import init, { add, greet } from "./pkg/dcalc.js";
+        init().then(() => {
+            window.add = add;
+            window.greet = greet;
+        //   let result = add(1, 1);
+        //   greet('The resul is :' + result)
+        }).catch(e=>console.error(e));
+      </script>
+  </head>
+  <body>
+    <input type="text" name="a" id="a"/>
+    <input type="text" name="b" id="b"/>
+    <input type="text" name="result" id="result">
+    <input type="submit" value="Add" onclick="document.getElementById('result').value = add(document.getElementById('a').value, document.getElementById('b').value)"/>
+   
+  </body>
+</html>
