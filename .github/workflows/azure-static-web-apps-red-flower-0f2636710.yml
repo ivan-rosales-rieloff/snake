@@ -30,7 +30,10 @@ jobs:
 
       - run: |
           cd pkg
-          npm link dcalc
+          pwd
+          npm link
+          npm install
+
         name: build rust wasm 
 
       - run: |
