@@ -1,3 +1,4 @@
 import("./node_modules/dcalc/dcalc.js").then((js) => {
-    js.greet("WebAssembly with npm");
-  });
+    window.add = add;
+    window.greet = greet;
+});
