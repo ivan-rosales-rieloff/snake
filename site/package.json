@@ -3,7 +3,7 @@
     "serve": "webpack-dev-server"
   },
   "dependencies": {
-    "dcalc": "^0.1.0"
+    "dcalc": "file:../pkg/"
   },
   "devDependencies": {
     "webpack": "^4.25.1",
