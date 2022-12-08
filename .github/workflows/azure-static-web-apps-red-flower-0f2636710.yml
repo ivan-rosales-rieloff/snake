@@ -34,13 +34,16 @@ jobs:
       - run: wasm-pack build --target bundler
         name: Build bundle
 
-    
-      - run: npm link dcalc
-        working-directory: ./site
+      - run: ls -lha
+        working-directory: ./site/
+        name: list site
+
+      - run: npm link ../dcalc
+        working-directory: ./site/
         name: link
 
       - run: npm install
-        working-directory: ./site
+        working-directory: ./site/
         name: npm install
 
       - name: Build And Deploy
