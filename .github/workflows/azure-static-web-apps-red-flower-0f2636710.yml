@@ -27,11 +27,11 @@ jobs:
 
       - run: wasm-pack build --target bundler
         name: Build bundle
-        
+
       - run: |
           cd site
-          npm link dcalc
-          npm install
+          pwd 
+          npm link dcalc && npm install
         name: build site
 
       - name: Build And Deploy
