@@ -38,7 +38,7 @@ jobs:
         working-directory: ./site/
         name: list site
 
-      - run: npm link ../dcalc
+      - run: npm link ../pkg
         working-directory: ./site/
         name: link
 
