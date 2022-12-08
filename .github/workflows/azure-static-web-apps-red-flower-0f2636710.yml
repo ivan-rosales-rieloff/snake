@@ -19,20 +19,20 @@ jobs:
         with:
           submodules: true
       
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      # - name: Use Node.js ${{ matrix.node-version }}
+      #   uses: actions/setup-node@v3
 
-      - name: Rust 'wasm-pack' Action
-        uses: michaelpeterswa/rust-wasm-pack-action@v1.0.0
+      # - name: Rust 'wasm-pack' Action
+      #   uses: michaelpeterswa/rust-wasm-pack-action@v1.0.0
 
-      # - run: |
-      #     curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
-      #     echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
-      #     cargo install wasm-pack
-      #   name: Setup Rust env
+      - run: |
+          curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
+          echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
+          cargo install wasm-pack
+        name: Setup Rust env
 
-      # - run: wasm-pack build --target bundler
-      #   name: Build bundle
+      - run: wasm-pack build --target bundler
+        name: Build bundle
 
     
       - run: npm link dcalc && npm install
