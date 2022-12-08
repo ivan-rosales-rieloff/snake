@@ -35,9 +35,13 @@ jobs:
         name: Build bundle
 
     
-      - run: npm link dcalc && npm install
-        working-directory: site
-        name: build site - 3
+      - run: npm link dcalc
+        working-directory: ./site
+        name: link
+
+      - run: npm install
+        working-directory: ./site
+        name: npm install
 
       - name: Build And Deploy
         id: builddeploy
