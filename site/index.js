@@ -1,4 +1,4 @@
 import("./node_modules/dcalc/dcalc.js").then((js) => {
-    window.add = add;
-    window.greet = greet;
+    window.add = js.add;
+    window.greet = js.greet;
 });
