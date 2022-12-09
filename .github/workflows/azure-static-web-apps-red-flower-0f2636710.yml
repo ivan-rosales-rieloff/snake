@@ -31,7 +31,7 @@ jobs:
           cargo install wasm-pack
         name: Setup Rust env
 
-      - run: wasm-pack build --target bundler
+      - run: wasm-pack build --target web
         name: Build bundle
 
       - run: ls -lha
