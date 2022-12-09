@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en-US">
-  <head>
-    <meta charset="utf-8" />
-    <title>hello-wasm example</title>
-    <script src="./index.js"></script>
-    <script>
-      function performAdd(params) {
-          let a = document.getElementById('a').value;
-          let b = document.getElementById('b').value;
-          let result = add(a, b);
-          document.getElementById('result').innerText = result;
-      }
-  </script>
-  </head>
+    <head>
+        <meta charset="utf-8" />
+        <title>hello-wasm example</title>
+        <script type="module">
+            import init, { add, greet } from "./pkg/dcalc.js";
+            init().then(() => {
+                window.add = add;
+                window.greet = greet;
+            }).catch(e => console.error(e));
+        </script>
+        <script>
+            function performAdd(params) {
+                let a = document.getElementById('a').value;
+                let b = document.getElementById('b').value;
+                let result = add(a, b);
+                document.getElementById('result').innerText = result;
+            }
+        </script>
+    </head>
+    
   <body>
     <div>
         <div style="white-space: nowrap;">
