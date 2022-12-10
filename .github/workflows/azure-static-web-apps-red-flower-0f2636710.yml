@@ -19,11 +19,6 @@ jobs:
         with:
           submodules: true
       
-      # - name: Use Node.js ${{ matrix.node-version }}
-      #   uses: actions/setup-node@v3
-
-
-
       - run: |
           curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
           echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
@@ -31,7 +26,6 @@ jobs:
 
       - uses: jetli/wasm-pack-action@v0.4.0
         with:
-          # Optional version of wasm-pack to install(eg. 'v0.9.1', 'latest')
           version: 'latest'
         name: Add wasm-pack 
 
@@ -41,18 +35,6 @@ jobs:
       - run: cp ./pkg/ ./site/pkg/ -R
         name: Copy WASM
 
-      # - run: ls -lha
-      #   working-directory: ./site/
-      #   name: list site
-
-      # - run: npm link ../pkg
-      #   working-directory: ./site/
-      #   name: link
-
-      # - run: npm install
-      #   working-directory: ./site/
-      #   name: npm install
-
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -61,12 +43,9 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
           skip_app_build: true
-          ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
-          # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "/site" # App source code path
-          api_location: "/pkg" # Api source code path - optional
-          output_location: "" # Built app content directory - optional
-          ###### End of Repository/Build Configurations ######
+          app_location: "/site" 
+          api_location: "" 
+          output_location: "" 
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
