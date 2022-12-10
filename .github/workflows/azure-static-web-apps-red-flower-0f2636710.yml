@@ -22,14 +22,17 @@ jobs:
       # - name: Use Node.js ${{ matrix.node-version }}
       #   uses: actions/setup-node@v3
 
-      # - name: Rust 'wasm-pack' Action
-      #   uses: michaelpeterswa/rust-wasm-pack-action@v1.0.0
+
 
       - run: |
           curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
           echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
-          cargo install wasm-pack
-        name: Setup Rust env
+        name: Setup Rust
+
+      - uses: jetli/wasm-pack-action@v0.4.0
+        with:
+        # Optional version of wasm-pack to install(eg. 'v0.9.1', 'latest')
+        version: 'latest'
 
       - run: wasm-pack build --target web
         name: Build WASM
