@@ -25,26 +25,26 @@ jobs:
       # - name: Rust 'wasm-pack' Action
       #   uses: michaelpeterswa/rust-wasm-pack-action@v1.0.0
 
-      - run: |
-          curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
-          echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
-          cargo install wasm-pack
-        name: Setup Rust env
+      # - run: |
+      #     curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
+      #     echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
+      #     cargo install wasm-pack
+      #   name: Setup Rust env
 
-      - run: wasm-pack build --target web
-        name: Build bundle
+      # - run: wasm-pack build --target web
+      #   name: Build bundle
 
-      - run: ls -lha
-        working-directory: ./site/
-        name: list site
+      # - run: ls -lha
+      #   working-directory: ./site/
+      #   name: list site
 
-      - run: npm link ../pkg
-        working-directory: ./site/
-        name: link
+      # - run: npm link ../pkg
+      #   working-directory: ./site/
+      #   name: link
 
-      - run: npm install
-        working-directory: ./site/
-        name: npm install
+      # - run: npm install
+      #   working-directory: ./site/
+      #   name: npm install
 
       - name: Build And Deploy
         id: builddeploy
