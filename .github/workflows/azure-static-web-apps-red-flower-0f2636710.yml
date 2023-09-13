@@ -44,6 +44,9 @@ jobs:
       - run: cp ./dist/ ./site/ -R
         name: Copy WASM
 
+      - run: cp ./favicon.ico ./site/ 
+        name: Copy WASM
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
