@@ -41,7 +41,7 @@ jobs:
       - run: trunk build --release
         name: Build WASM
 
-      - run: cp ./pkg/ ./site/pkg/ -R
+      - run: cp ./dist/ ./site/ -R
         name: Copy WASM
 
       - name: Build And Deploy
