@@ -23,7 +23,15 @@ jobs:
           curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
           echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
         name: Setup Rust
-
+        
+      - name: brndnmtthws/rust-action-rustup
+        # You may pin to the exact commit or the version.
+        # uses: brndnmtthws/rust-action-rustup@bf5d3fa33a16dddad2e0fe9a84439486182a9803
+        uses: brndnmtthws/rust-action-rustup@v1.0.0
+        with:
+          toolchain: stable
+          targets: wasm32-unknown-unknown
+      
       - name: trunk-action
         # You may pin to the exact commit or the version.
         # uses: jetli/trunk-action@68dbd78ba531c95d8ce3d262c9e63291926e9353
