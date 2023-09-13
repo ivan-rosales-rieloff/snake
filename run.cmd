@@ -1,2 +1,3 @@
-call .\build.cmd
-python3 -m http.server 
+REM call .\build.cmd
+REM python3 -m http.server 
+trunk serve --release
