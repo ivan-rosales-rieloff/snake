@@ -67,7 +67,8 @@ fn my_app() -> Html {
     }) as Box<dyn FnMut()>)
     .into_js_value();
 
-    w.set_onload(Option::Some(c.as_ref().unchecked_ref()));
+    let body = w.document().unwrap().body().unwrap();
+    body.set_onload(Option::Some(c.as_ref().unchecked_ref()));
     //
 
     html! {
@@ -226,9 +227,14 @@ fn my_header() -> Html {
 
 #[function_component(CanvasPane)]
 fn my_user_pane() -> Html {
+    
     html! {
         <div>
         <canvas id={"canvas"} />
+        <br/>
+        <input type={"button"} onclick={|_e:yew::MouseEvent|{
+            window().unwrap().onload();
+        } } value={"cargar"} />
         </div>
     }
 }
