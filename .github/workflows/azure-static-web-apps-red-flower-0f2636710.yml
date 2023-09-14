@@ -31,13 +31,10 @@ jobs:
         with:
           toolchain: stable
           targets: wasm32-unknown-unknown
-
-      - name: Trunk Install
-        uses: mbround18/trunk-rs@v0.0.1
-        with:
-          jqVersion: # default is 1.6
-          version: # default is latest
           
+      - run: cargo install --locked trunk
+        name: Install Trunk
+         
       - run: trunk build --release --all-features --public-url /
         name: Build WASM
 
