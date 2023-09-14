@@ -1,14 +1,14 @@
 mod snake;
 mod world;
-use std::sync::Mutex;
+use std::{sync::Mutex, time::Duration};
 
 use once_cell::sync::Lazy;
 use world::World;
 
 use anyhow::*;
 use js_sys::Array;
-use wasm_bindgen::{prelude::Closure, JsCast, JsValue};
-use web_sys::{window, CanvasRenderingContext2d, HtmlCanvasElement, HtmlElement, KeyboardEvent};
+use wasm_bindgen::{prelude::{Closure, wasm_bindgen}, JsCast, JsValue};
+use web_sys::{window, CanvasRenderingContext2d, HtmlCanvasElement, HtmlElement, KeyboardEvent, Event};
 use yew::{function_component, html, Html};
 
 use crate::snake::Direction;
@@ -24,54 +24,56 @@ fn main() {
     yew::Renderer::<App>::new().render();
 }
 
+#[wasm_bindgen]
+pub fn load_game(){
+    let w2 = window().context("no se pudo obtener la ventana").unwrap();
+    w2.alert_with_message("WASM Loaded!!").unwrap();
+    draw();
+    w2.add_event_listener_with_callback(
+        "keydown",
+        Closure::wrap(Box::new(|e: KeyboardEvent| {
+            let key = e.key();
+            let mut world_config = GLOBAL_WORLD.lock().unwrap();
+            let old_dir = world_config.snake.direction.clone();
+            let new_dir = match key.as_str() {
+                "ArrowUp" => Direction::Up,
+                "ArrowDown" => Direction::Down,
+                "ArrowLeft" => Direction::Left,
+                "ArrowRight" => Direction::Right,
+                _ => Direction::None,
+            };
+            if new_dir != Direction::None {
+                world_config.snake.direction = new_dir;
+                let pos = move_snake(world_config.to_owned());
+                if pos == world_config.snake.body[1].0 {
+                    world_config.snake.direction = old_dir;
+                }
+            }
+        }) as Box<dyn FnMut(_)>)
+        .into_js_value()
+        .as_ref()
+        .unchecked_ref(),
+    )
+    .unwrap();
+    //let t = yew::platform::time::interval(Duration::from_secs_f32(1.0));
+    let closure = Closure::wrap(Box::new(draw) as Box<dyn FnMut()>);
+    w2.set_interval_with_callback_and_timeout_and_arguments(
+        closure.into_js_value().as_ref().unchecked_ref(),
+        300,
+        &Array::new(),
+    )
+    .unwrap();
+}
+
 #[function_component(App)]
 fn my_app() -> Html {
-    let w = window().context("no se pudo obtener la ventana").unwrap();
-    let c = Closure::wrap(Box::new(move || {
-        let w2 = window().context("no se pudo obtener la ventana").unwrap();
-        draw();
-        w2.add_event_listener_with_callback(
-            "keydown",
-            Closure::wrap(Box::new(|e: KeyboardEvent| {
-                let key = e.key();
-                let mut world_config = GLOBAL_WORLD.lock().unwrap();
-                let old_dir = world_config.snake.direction.clone();
-                let new_dir = match key.as_str() {
-                    "ArrowUp" => Direction::Up,
-                    "ArrowDown" => Direction::Down,
-                    "ArrowLeft" => Direction::Left,
-                    "ArrowRight" => Direction::Right,
-                    _ => Direction::None,
-                };
-                if new_dir != Direction::None {
-                    world_config.snake.direction = new_dir;
-                    let pos = move_snake(world_config.to_owned());
-                    if pos == world_config.snake.body[1].0 {
-                        world_config.snake.direction = old_dir;
-                    }
-                }
-            }) as Box<dyn FnMut(_)>)
-            .into_js_value()
-            .as_ref()
-            .unchecked_ref(),
-        )
-        .unwrap();
-
-        let closure = Closure::wrap(Box::new(draw) as Box<dyn FnMut()>);
-        w2.set_interval_with_callback_and_timeout_and_arguments(
-            closure.into_js_value().as_ref().unchecked_ref(),
-            100,
-            &Array::new(),
-        )
-        .unwrap();
-    }) as Box<dyn FnMut()>)
-    .into_js_value();
-
-    let body = w.document().unwrap().body().unwrap();
-    body.set_onload(Option::Some(c.as_ref().unchecked_ref()));
-    //
-
-    html! {
+     let w = window().context("no se pudo obtener la ventana").unwrap();
+    let closure = Closure::wrap(Box::new(move |_e:Event| {load_game();}) as Box<dyn FnMut(_)>)
+     .into_js_value();
+    //let body = w.document().unwrap().body().unwrap();
+    //body.set_onload(Option::Some(c.as_ref().unchecked_ref()));
+    w.set_onload(Option::Some(closure.as_ref().unchecked_ref()));
+    html! {        
         <div>
         <Header />
         <CanvasPane />
@@ -232,9 +234,70 @@ fn my_user_pane() -> Html {
         <div>
         <canvas id={"canvas"} />
         <br/>
+        <div>
+        <table>
+        <tr>
+        <td><span/></td>
+        <td>
+            <input type={"button"} onclick={|_e:yew::MouseEvent|{
+                let mut world_config = GLOBAL_WORLD.lock().unwrap();
+                let old_dir = world_config.snake.direction.clone();
+                let new_dir =  Direction::Up;
+                world_config.snake.direction = new_dir;
+                let pos = move_snake(world_config.to_owned());
+                if pos == world_config.snake.body[1].0 {
+                    world_config.snake.direction = old_dir;
+                }                
+            } } value={"Arriba"} />
+        </td>
+        <td><span/></td>
+        </tr>
+        <tr>
+        <td>            
         <input type={"button"} onclick={|_e:yew::MouseEvent|{
-            window().unwrap().onload();
-        } } value={"cargar"} />
+            let mut world_config = GLOBAL_WORLD.lock().unwrap();
+                let old_dir = world_config.snake.direction.clone();
+                let new_dir =  Direction::Left;
+                world_config.snake.direction = new_dir;
+                let pos = move_snake(world_config.to_owned());
+                if pos == world_config.snake.body[1].0 {
+                    world_config.snake.direction = old_dir;
+                }
+        } } value={"Izquierda"} />
+        </td>
+        <td><span/>
+        </td>
+        <td>            
+        <input type={"button"} onclick={|_e:yew::MouseEvent|{
+            let mut world_config = GLOBAL_WORLD.lock().unwrap();
+            let old_dir = world_config.snake.direction.clone();
+            let new_dir =  Direction::Right;
+            world_config.snake.direction = new_dir;
+            let pos = move_snake(world_config.to_owned());
+            if pos == world_config.snake.body[1].0 {
+                world_config.snake.direction = old_dir;
+            }
+        } } value={"Derecha"} />
+</td>
+        </tr>
+        <tr>
+        <td><span/></td>
+        <td>
+            <input type={"button"} onclick={|_e:yew::MouseEvent|{
+                let mut world_config = GLOBAL_WORLD.lock().unwrap();
+                let old_dir = world_config.snake.direction.clone();
+                let new_dir =  Direction::Down;
+                world_config.snake.direction = new_dir;
+                let pos = move_snake(world_config.to_owned());
+                if pos == world_config.snake.body[1].0 {
+                    world_config.snake.direction = old_dir;
+                }
+            } } value={"Abajo"} />
+        </td>
+        <td><span/></td>
+        </tr>
+        </table>
+        </div>
         </div>
     }
 }
