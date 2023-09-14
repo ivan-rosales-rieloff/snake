@@ -31,13 +31,13 @@ jobs:
         with:
           toolchain: stable
           targets: wasm32-unknown-unknown
-      
-      - name: trunk-action
-        # You may pin to the exact commit or the version.
-        # uses: jetli/trunk-action@68dbd78ba531c95d8ce3d262c9e63291926e9353
-        uses: jetli/trunk-action@v0.4.0
+
+      - name: Trunk Install
+        uses: mbround18/trunk-rs@v0.0.1
         with:
-          version: latest
+          jqVersion: # default is 1.6
+          version: # default is latest
+          
       - run: trunk build --release --all-features --public-url /
         name: Build WASM
 
@@ -45,7 +45,7 @@ jobs:
         name: Copy WASM
 
       - run: cp ./favicon.ico ./site/ 
-        name: Copy WASM
+        name: Copy favicon
 
       - name: Build And Deploy
         id: builddeploy
