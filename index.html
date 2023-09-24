@@ -11,6 +11,7 @@
         init().then(() => {
             window.Direction = Direction;
             world_config = World.new(world_size, snake_size);
+            start_game();
         }).catch(e => console.error(e));
     </script>
 
@@ -181,7 +182,7 @@
     </script>
 </head>
 
-<body onload="start_game()">
+<body>
     <div style="position: relative;align-content: center; place-content: center;">
         <div style="font-family:Arial, Helvetica, sans-serif;font-weight: bolder;font-size: xx-large;place-content: center; display: flexbox; position: relative;text-align: center;">
             Snake Game
