@@ -32,17 +32,20 @@ jobs:
           toolchain: stable
           targets: wasm32-unknown-unknown
                 
-      - name: Rust 'wasm-pack' Action
-        run: cargo install wasm-pack
+      - uses: jetli/wasm-pack-action@v0.4.0
+        with:
+          # Optional version of wasm-pack to install(eg. 'v0.9.1', 'latest')
+          version: 'latest'
+        name: Add wasm-pack 
         
-      - name: wasm-bindgen-action
-        run: cargo install wasm-bindgen-cli
+      # - name: wasm-bindgen-action
+      #   run: cargo install wasm-bindgen-cli
 
 
       - run: wasm-pack build --target web 
         name: Build WASM
 
-      - run: cp ./pkg/ ./site/pkg/ -R
+      - run: cp ./pkg ./site/ -R
         name: Copy WASM
 
       - run: cp ./favicon.ico ./site/ 
