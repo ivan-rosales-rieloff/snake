@@ -45,7 +45,7 @@ jobs:
       - run: wasm-pack build --target web 
         name: Build WASM
 
-      - run: mkdir ./site/pkg
+      - run: mkdir -p ./site/pkg
         name: Create site folders
 
       - run: cp ./pkg ./site/pkg -R
