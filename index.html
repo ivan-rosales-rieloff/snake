@@ -25,6 +25,8 @@
         let y_start = 0;
         let x_end = 0;
         let y_end = 0;
+        var max_score = 0;
+
         let interval = function () {
             let v = 300 - (world_config.get_snake_length() * 8);
             return v;
@@ -86,7 +88,8 @@
 
             world_config.move_snake();
             draw();
-            if (!world_config.can_play()) {
+
+            if (world_config.can_play()==true) {
                 window.setTimeout(process_frame, interval());
             } else {
                 var div = document.body.appendChild(document.createElement("div"));
@@ -109,13 +112,19 @@
                 msg.style.textAlign = "center";
                 msg.style.width = "100%";
                 msg.textContent = "Fin del Juego";
+                var score = div.appendChild(document.createElement("span"));
+                score.style.alignContent = "center";
+                score.style.textAlign = "center";
+                score.style.width = "100%";
+                score.textContent = "Score: " + world_config.get_score() + " Max Score: " + max_score;
+
                 var btn = div.appendChild(document.createElement("button"));
                 btn.textContent = "Juego Nuevo";
                 btn.style.display = "flow";
                 btn.style.position = "relative";
                 btn.style.height = "50%";
                 btn.style.width = "50%";
-                btn.style.backgroundColor = "#FFFFFF";
+                btn.style.backgroundColor = "#EBFDFF";
                 btn.style.fontFamily = "Courier New', Courier, monospace";
                 btn.style.fontSize = "34pt";
                 btn.style.fontWeight = "bolder"
@@ -134,8 +143,16 @@
             canvas.height = get_world_size();
             canvas.width = get_world_size();
             var score = world_config.get_score();
+            if (max_score < score) {
+                max_score = score;
+            }
             var score_board = document.getElementById("score_board");
             score_board.textContent = score;
+
+            var max_score_board = document.getElementById("max_score_board");
+            max_score_board.textContent = max_score;
+
+
             var ctx = canvas.getContext("2d");
             ctx.beginPath();
             draw_grid(ctx, "#5EA7DB");
@@ -185,13 +202,19 @@
 
 <body style="background-color: azure;">
     <div style="position: relative;align-content: center; place-content: center;">
-        <div style="font-family:Arial, Helvetica, sans-serif;font-weight: bolder;font-size: xx-large;place-content: center; display: flexbox; position: relative;text-align: center;">
+        <div
+            style="font-family:Arial, Helvetica, sans-serif;font-weight: bolder;font-size: xx-large;place-content: center; display: flexbox; position: relative;text-align: center;">
             Snake Game
         </div>
         <div style="text-align: right;">
             <label style="font-family: 'Courier New', Courier, monospace;font-weight: bolder;">SCORE</label>
             <label id="score_board"
                 style="font-family: 'Courier New', Courier, monospace;font-weight: bolder;">0</label>
+        </div><div style="text-align: left;">
+            <label style="font-family: 'Courier New', Courier, monospace;font-weight: bolder;">MAX SCORE</label>
+            <label id="max_score_board"
+                style="font-family: 'Courier New', Courier, monospace;font-weight: bolder;">0</label>
+
         </div>
         <div style="place-content: center; display: flexbox; position: relative;text-align: center;">
             <canvas id="canvas"></canvas>

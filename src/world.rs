@@ -19,7 +19,7 @@ impl World {
     }
     pub fn can_play(&self)->bool{
         let head = self.snake.get_snake_head().unwrap();
-         self.snake.contains_in_body(head)
+         self.snake.contains_in_body(head)==false
     }
     pub fn reset_world(&mut self, size: i32, snake_length: i32) {
         let mut w = init(size, snake_length);
