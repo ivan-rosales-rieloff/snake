@@ -48,7 +48,7 @@ jobs:
       - run: mkdir -p ./site/pkg
         name: Create site folders
 
-      - run: cp ./pkg ./site/pkg -R
+      - run: cp ./pkg/ ./site/pkg/ -R
         name: Copy WASM
 
       - run: cp ./favicon.ico ./site/ 
