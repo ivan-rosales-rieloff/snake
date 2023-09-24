@@ -45,10 +45,10 @@ jobs:
       - run: wasm-pack build --target web 
         name: Build WASM
 
-      - run: mkdir -p ./site/pkg
+      - run: mkdir -p ./site
         name: Create site folders
 
-      - run: cp ./pkg/ ./site/pkg/ -R
+      - run: cp ./pkg/ ./site/ -R
         name: Copy WASM
 
       - run: cp ./favicon.ico ./site/ 
