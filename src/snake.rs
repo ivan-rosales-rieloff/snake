@@ -1,5 +1,7 @@
 use std::option::Option;
 
+use wasm_bindgen::prelude::*;
+
 impl Clone for Snake {
     fn clone(&self) -> Self {
         Self {
@@ -8,21 +10,16 @@ impl Clone for Snake {
         }
     }
 }
-// impl Copy for Snake {
-//     fn copy(&self) -> Self {
-//         Self {
-//             body: self.body.clone(),
-//         }
-//     }
-// }
 
 #[derive(PartialEq, Debug)]
+#[wasm_bindgen]
 pub struct Snake {
-    pub body: Vec<SnakeCell>,
-    pub direction: Direction,
+    body: Vec<SnakeCell>,
+    direction: Direction,
 }
 #[non_exhaustive]
 #[derive(Debug, PartialEq, Clone)]
+#[wasm_bindgen]
 pub enum Direction {
     Up,
     Down,
@@ -30,13 +27,9 @@ pub enum Direction {
     Right,
     None,
 }
-// impl Copy for Snake {
-//     fn clone(&self) -> Self {
-//         self.clone()
-//     }
-// }
 
 #[derive(Clone, PartialEq, Debug)]
+#[wasm_bindgen]
 pub struct SnakeCell(pub i32);
 
 impl Snake {
@@ -77,5 +70,20 @@ impl Snake {
     pub fn append_cell(&mut self) {
         let cell = self.body.last().unwrap().clone();
         self.body.push(cell);
+    }
+    pub fn clear_body(&mut self) {
+        self.body.clear();
+    }
+    pub fn set_direction(&mut self, dir: Direction) {
+        self.direction = dir;
+    }
+    pub fn get_direction(&mut self) -> Direction {
+        self.direction.clone()
+    }
+    pub fn append_body_cells(&mut self, cells: &mut Vec<SnakeCell>) {
+        self.body.append(cells);
+    }
+    pub fn get_body(&self) -> Vec<SnakeCell> {
+        self.body.clone()
     }
 }

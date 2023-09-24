@@ -32,16 +32,33 @@ jobs:
           toolchain: stable
           targets: wasm32-unknown-unknown
           
-      - run: cargo install --locked trunk
-        name: Install Trunk
-         
-      - run: trunk build --release --all-features --public-url /
+      - name: wasm-pack-action
+        # You may pin to the exact commit or the version.
+        # uses: jetli/wasm-pack-action@0d096b08b4e5a7de8c28de67e11e945404e9eefa
+        uses: jetli/wasm-pack-action@v0.4.0
+        with:
+          # Optional version of wasm-pack to install (eg. "v0.9.1", "latest")
+          version: # optional, default is latest
+
+      - name: wasm-bindgen-action
+        # You may pin to the exact commit or the version.
+        # uses: jetli/wasm-bindgen-action@20b33e20595891ab1a0ed73145d8a21fc96e7c29
+        uses: jetli/wasm-bindgen-action@v0.2.0
+        with:
+          # Optional version of wasm-bindgen to install (eg. "0.2.68", "latest")
+          version: # optional, default is latest
+
+
+      - run: wasm-pack build --target web 
         name: Build WASM
 
-      - run: cp ./dist/ ./site/ -R
+      - run: cp ./pkg/ ./site/pkg/ -R
         name: Copy WASM
 
       - run: cp ./favicon.ico ./site/ 
+        name: Copy favicon
+
+      - run: cp ./index.html ./site/ 
         name: Copy favicon
 
       - name: Build And Deploy

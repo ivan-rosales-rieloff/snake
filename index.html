@@ -1,13 +1,200 @@
 <!DOCTYPE html>
 <html lang="es-CL">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Snake Game</title>
+
+    <script type="module">
+        import init, { Direction, World } from "./pkg/snake_app.js";
+        init().then(() => {
+            window.Direction = Direction;
+            world_config = World.new(world_size, snake_size);
+        }).catch(e => console.error(e));
+    </script>
+
+
+    <script>
+        let world_config = {};
+        let world_size = 16;
+        let cell_size = 20;
+        let snake_size = 2;
+        let x_start = 0;
+        let y_start = 0;
+        let x_end = 0;
+        let y_end = 0;
+        let interval = function () {
+            let v = 300 - (world_config.get_snake_length() * 8);
+            return v;
+        };
+        function start_game() {
+            draw();
+            window.setTimeout(process_frame, interval());
+            ontouchstart = (e) => {
+                x_start = e.targetTouches[0].screenX;
+                y_start = e.targetTouches[0].screenY;
+            };
+            ontouchmove = (e) => {
+                x_end = e.changedTouches[0].screenX;
+                y_end = e.changedTouches[0].screenY;
+                var x_axis = x_start - x_end;
+                var y_axis = y_start - y_end;
+                if (Math.abs(x_axis) > Math.abs(y_axis)) {
+                    // derecha / izquierda
+                    if (x_axis > 0) {
+                        world_config.set_snake_direction(Direction.Left);
+                    }
+                    else {
+                        world_config.set_snake_direction(Direction.Right);
+                    }
+                }
+                else {
+                    // arriba // abajo
+                    if (y_axis > 0) {
+                        world_config.set_snake_direction(Direction.Up);
+                    } else {
+                        world_config.set_snake_direction(Direction.Down);
+                    }
+                }
+            };
+            onkeydown = (e) => {
+                var key = e.key;
+                switch (key) {
+                    case "ArrowUp":
+                        world_config.set_snake_direction(Direction.Up);
+                        break;
+                    case "ArrowDown":
+                        world_config.set_snake_direction(Direction.Down);
+                        break;
+                    case "ArrowLeft":
+                        world_config.set_snake_direction(Direction.Left);
+                        break;
+                    case "ArrowRight":
+                        world_config.set_snake_direction(Direction.Right);
+                        break;
+                    default:
+                        break;
+                }
+            };
+        }
+        function get_world_size() {
+            return world_size * cell_size;
+        }
+        function process_frame() {
+
+            world_config.move_snake();
+            draw();
+            if (!world_config.can_play()) {
+                window.setTimeout(process_frame, interval());
+            } else {
+                var div = document.body.appendChild(document.createElement("div"));
+                div.style.alignContent = "center";
+                div.style.position = "absolute";
+                div.style.border = "1px 1px 1px 1px black";
+                div.style.background = "white";
+                div.style.height = "100%";
+                div.style.width = "100%";
+                div.style.top = "0";
+                div.style.left = "0";
+                div.style.display = "flex";
+                div.style.flexWrap = "wrap";
+                div.style.fontFamily = "Courier New', Courier, monospace";
+                div.style.fontSize = "24pt";
+                div.style.fontWeight = "bolder"
+                div.style.placeContent = "center";
+                var msg = div.appendChild(document.createElement("span"));
+                msg.style.alignContent = "center";
+                msg.style.textAlign = "center";
+                msg.style.width = "100%";
+                msg.textContent = "Fin del Juego";
+                var btn = div.appendChild(document.createElement("button"));
+                btn.textContent = "Juego Nuevo";
+                btn.style.display = "flow";
+                btn.style.position = "relative";
+                btn.style.height = "50%";
+                btn.style.width = "50%";
+                btn.style.backgroundColor = "#FFFFFF";
+                btn.style.fontFamily = "Courier New', Courier, monospace";
+                btn.style.fontSize = "34pt";
+                btn.style.fontWeight = "bolder"
+
+                btn.onclick = (e) => {
+                    world_config.reset_world(world_size, snake_size);
+                    draw();
+                    var parent = e.target.parentElement;
+                    document.body.removeChild(parent);
+                    window.setTimeout(process_frame, interval());
+                };
+            }
+        }
+        function draw() {
+            var canvas = document.getElementById("canvas");
+            canvas.height = get_world_size();
+            canvas.width = get_world_size();
+            var score = world_config.get_score();
+            var score_board = document.getElementById("score_board");
+            score_board.textContent = score;
+            var ctx = canvas.getContext("2d");
+            ctx.beginPath();
+            draw_grid(ctx);
+            draw_price(ctx, "#FF000F")
+            draw_snake(ctx, "#00FF00", world_config.get_body());
+            ctx.stroke();
+        }
+
+
+        function draw_price(ctx, color) {
+            var col = world_config.get_price_cell() % world_size;
+            var row = Math.floor(world_config.get_price_cell() / world_size);
+            ctx.fillStyle = color;
+            ctx.fillRect(
+                cell_size * col,
+                cell_size * row,
+                cell_size,
+                cell_size,
+            );
+        }
+        function draw_snake(ctx, color, snake) {
+            ctx.fillStyle = color;
+            snake.forEach(element => {
+                var col = element % world_size;
+                var row = Math.floor(element / world_size);
+                ctx.fillRect(
+                    cell_size * col,
+                    cell_size * row,
+                    cell_size,
+                    cell_size,
+                );
+            });
+        }
+        function draw_grid(ctx) {
+            for (i = 0; i <= world_size; i++) {
+                let start_position = cell_size * i;
+                let end_position = world_size * cell_size;
+                ctx.moveTo(start_position, 0);
+                ctx.lineTo(start_position, end_position);
+                ctx.moveTo(0, start_position);
+                ctx.lineTo(end_position, start_position);
+            }
+        }
+    </script>
 </head>
 
-<body>
-    
+<body onload="start_game()">
+    <div style="position: relative;align-content: center; place-content: center;">
+        <div style="font-family:Arial, Helvetica, sans-serif;font-weight: bolder;font-size: xx-large;place-content: center; display: flexbox; position: relative;text-align: center;">
+            Snake Game
+        </div>
+        <div style="text-align: right;">
+            <label style="font-family: 'Courier New', Courier, monospace;font-weight: bolder;">SCORE</label>
+            <label id="score_board"
+                style="font-family: 'Courier New', Courier, monospace;font-weight: bolder;">0</label>
+        </div>
+        <div style="place-content: center; display: flexbox; position: relative;text-align: center;">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
 </body>
 
 </html>

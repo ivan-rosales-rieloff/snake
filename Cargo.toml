@@ -3,6 +3,10 @@ name = "snake-app"
 version = "0.1.0"
 edition = "2021"
 
+
+[lib]
+crate-type = ["cdylib"]
+
 [dependencies]
 rand = "0.8.5"
 js-sys = "*"
@@ -13,7 +17,6 @@ web-sys = { version = "0.3.60", features = [
     "CanvasRenderingContext2d",
     "TextMetrics",
 ] }
-yew = { version = "0.20.0", features = ["csr"] }
 wasm-bindgen = "0.2.83"
 serde = "*"
 anyhow = "1.0.75"
