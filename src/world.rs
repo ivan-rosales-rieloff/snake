@@ -17,9 +17,9 @@ impl World {
     pub fn new(size: i32, snake_length: i32) -> Self {
         init(size, snake_length)
     }
-    pub fn can_play(&self)->bool{
+    pub fn can_play(&self) -> bool {
         let head = self.snake.get_snake_head().unwrap();
-         self.snake.contains_in_body(head)==false
+        !self.snake.contains_in_body(head)
     }
     pub fn reset_world(&mut self, size: i32, snake_length: i32) {
         let mut w = init(size, snake_length);
@@ -48,10 +48,10 @@ impl World {
             .collect()
     }
 
-    pub fn get_snake_length(&self)->i32{
+    pub fn get_snake_length(&self) -> i32 {
         self.snake.get_snake_length()
     }
-    
+
     pub fn get_price_cell(&self) -> i32 {
         self.price_cell
     }
@@ -69,18 +69,17 @@ impl World {
         let pos = self.calculate_pos();
         self.snake.set_position(pos);
         self.check_price();
-
     }
-    pub fn get_score(&self)->i32{
+    pub fn get_score(&self) -> i32 {
         self.score
     }
     fn check_price(&mut self) {
-     if self.snake.get_snake_head().unwrap() == self.price_cell {
-        let snake_length = self.snake.get_snake_length();
-        self.append_snake_cell();
-        self.reset_price();
-        self.score += snake_length;
-    }
+        if self.snake.get_snake_head().unwrap() == self.price_cell {
+            let snake_length = self.snake.get_snake_length();
+            self.append_snake_cell();
+            self.reset_price();
+            self.score += snake_length;
+        }
     }
 
     fn calculate_pos(&mut self) -> i32 {
