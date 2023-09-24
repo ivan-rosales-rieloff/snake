@@ -31,14 +31,11 @@ jobs:
         with:
           toolchain: stable
           targets: wasm32-unknown-unknown
-          
-      - name: wasm-pack-action
+                
+      - name: Rust 'wasm-pack' Action
         # You may pin to the exact commit or the version.
-        # uses: jetli/wasm-pack-action@0d096b08b4e5a7de8c28de67e11e945404e9eefa
-        uses: jetli/wasm-pack-action@v0.4.0
-        with:
-          # Optional version of wasm-pack to install (eg. "v0.9.1", "latest")
-          version: # optional, default is latest
+        # uses: michaelpeterswa/rust-wasm-pack-action@95b263e0ee2387791a706a7c8e75c8ac5036e015
+        uses: michaelpeterswa/rust-wasm-pack-action@v1.0.0
 
       - name: wasm-bindgen-action
         # You may pin to the exact commit or the version.
