@@ -88,39 +88,32 @@ impl World {
 
         let col = head % self.world_size;
         let row = head / self.world_size;
-
         let direction = self.snake.get_direction();
         match direction {
-            snake::Direction::Right => ((row * self.world_size) + (col + 1)) % size,
+            snake::Direction::Right => {
+                if col == self.world_size - 1 {
+                    (row * self.world_size) % size
+                } else {
+                    ((row * self.world_size) + (col + 1)) % size
+                }
+            }
             snake::Direction::Left => {
                 if col == 0 {
-                    if row == 0 {
-                        self.world_size * self.world_size
-                    } else {
-                        (((row - 1) * self.world_size) + (self.world_size - 1)) % size
-                    }
+                    ((row * self.world_size) + (self.world_size-1)) % size
                 } else {
                     ((row * self.world_size) + (col - 1)) % size
                 }
             }
             snake::Direction::Up => {
                 if row == 0 {
-                    if col == self.world_size - 1 {
-                        ((self.world_size - 1) * self.world_size) % size
-                    } else {
-                        (((self.world_size - 1) * self.world_size) + (col + 1)) % size
-                    }
+                    (((self.world_size -1) * self.world_size) + col) % size
                 } else {
                     (((row - 1) * self.world_size) + col) % size
                 }
             }
             snake::Direction::Down => {
-                if row == self.world_size - 1 {
-                    if col == 0 {
-                        ((self.world_size * self.world_size) + (self.world_size - 1)) % size
-                    } else {
-                        ((self.world_size * self.world_size) + (col - 1)) % size
-                    }
+                if row == self.world_size {
+                    ((row * self.world_size) + col) % size
                 } else {
                     (((row + 1) * self.world_size) + col) % size
                 }

@@ -18,17 +18,81 @@
 
     <script>
         let world_config = {};
-        let world_size = 16;
-        let cell_size = 20;
+        let world_size = 32;
+        let cell_size = 10;
         let snake_size = 2;
         let x_start = 0;
         let y_start = 0;
         let x_end = 0;
         let y_end = 0;
+        const umbral_nivel = 5;
         var max_score = 0;
+        const price_colors = [
+            "#DBBB19",
+            "#C5DB23",
+            "#2E83DB",
+            "#8102DB",
+            "#DB8F0D",
+            "#DB0DAB",
+            "#23DB70",
+            "#932EDB",
+            "#C3DB0D",
+            "#8F096F",
+            "#8F7A10",
+            "#278F10",
+            "#1C178F",
+            "#178F49",
+            "#8F3909",
+            "#278F10",
+            "#7244DB",
+            "#108F8C",
+            "#8F1773",
+        ];
 
+        const snake_color = [
+            "#8F1773",
+            "#DBBB19",
+            "#C5DB23",
+            "#2E83DB",
+            "#8102DB",
+            "#DB8F0D",
+            "#DB0DAB",
+            "#23DB70",
+            "#932EDB",
+            "#C3DB0D",
+            "#8F096F",
+            "#8F7A10",
+            "#278F10",
+            "#1C178F",
+            "#178F49",
+            "#8F3909",
+            "#278F10",
+            "#7244DB",
+            "#108F8C",
+        ];
+        const grid_color = [
+            "#7F4C8F",
+            "#6970DB",
+            "#DB9474",
+            "#5EA7DB",
+            "#616275",
+            "#383EA8",
+            "#A85A38",
+            "#2F678F",
+        ];
         let interval = function () {
-            let v = 300 - (world_config.get_snake_length() * 8);
+            
+            var fps = 0;
+            if(world_config.get_snake_length() < 20){
+                fps = (world_config.get_snake_length() * umbral_nivel * 2); 
+            }
+            else if(world_config.get_snake_length() < 40){
+                fps = 100 + (world_config.get_snake_length() * umbral_nivel); 
+            }else{
+                fps = 215 + (world_config.get_snake_length() * Math.floor(umbral_nivel/2));
+            }
+   
+            let v = 320 - fps;
             return v;
         };
         function start_game() {
@@ -91,7 +155,7 @@
             world_config.move_snake();
             draw();
 
-            if (world_config.can_play()==true) {
+            if (world_config.can_play() == true) {
                 window.setTimeout(process_frame, interval());
             } else {
                 var div = document.body.appendChild(document.createElement("div"));
@@ -157,9 +221,10 @@
 
             var ctx = canvas.getContext("2d");
             ctx.beginPath();
-            draw_grid(ctx, "#5EA7DB");
-            draw_price(ctx, "#DBBB19")
-            draw_snake(ctx, "#383EA8", world_config.get_body());
+
+            draw_grid(ctx, grid_color[Math.floor(world_config.get_snake_length() / umbral_nivel) % umbral_nivel]);
+            draw_price(ctx, price_colors[world_config.get_snake_length() % price_colors.length])
+            draw_snake(ctx, snake_color[world_config.get_snake_length() % snake_color.length], world_config.get_body());
             ctx.stroke();
         }
 
@@ -202,24 +267,35 @@
     </script>
 </head>
 
-<body style="background-color: azure;overscroll-behavior: none;">
-    <div style="position: relative;align-content: center; place-content: center;">
+<body style="background-color: azure;overscroll-behavior: none; ">
+    <div style="position: relative;align-content: center; place-content: center;width: 360px;">
         <div
             style="font-family:Arial, Helvetica, sans-serif;font-weight: bolder;font-size: xx-large;place-content: center; display: flexbox; position: relative;text-align: center;">
             Snake Game
         </div>
-        <div style="text-align: right;">
-            <label style="font-family: 'Courier New', Courier, monospace;font-weight: bolder;">SCORE</label>
-            <label id="score_board"
-                style="font-family: 'Courier New', Courier, monospace;font-weight: bolder;">0</label>
-        </div><div style="text-align: left;">
-            <label style="font-family: 'Courier New', Courier, monospace;font-weight: bolder;">MAX SCORE</label>
-            <label id="max_score_board"
-                style="font-family: 'Courier New', Courier, monospace;font-weight: bolder;">0</label>
+        <div style="display:flex;">
+            <div style="text-align: right;;">
+                <label style="font-family: 'Courier New', Courier, monospace;font-weight: bolder;">SCORE</label>
+                <label id="score_board"
+                    style="font-family: 'Courier New', Courier, monospace;font-weight: bolder;">0</label>
+            </div>
+            <div style="width: 40%;">&nbsp;</div>
+            <div style="text-align: left;">
+                <label style="font-family: 'Courier New', Courier, monospace;font-weight: bolder;">MAX SCORE</label>
+                <label id="max_score_board"
+                    style="font-family: 'Courier New', Courier, monospace;font-weight: bolder;">0</label>
 
+            </div>
         </div>
         <div style="place-content: center; display: flexbox; position: relative;text-align: center;">
             <canvas id="canvas"></canvas>
+        </div>
+        <div>
+            <div
+                style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;">
+                <p>Usa las teclas Arriba, Abajo, Izquierda, Derecha o Desliza tu dedo para mover a la serpiente en a
+                    dirección deseada</p>
+            </div>
         </div>
     </div>
 </body>
