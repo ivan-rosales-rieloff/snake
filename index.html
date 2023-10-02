@@ -81,17 +81,17 @@
             "#2F678F",
         ];
         let interval = function () {
-            
+
             var fps = 0;
-            if(world_config.get_snake_length() < 20){
-                fps = (world_config.get_snake_length() * umbral_nivel * 2); 
+            if (world_config.get_snake_length() < 20) {
+                fps = (world_config.get_snake_length() * umbral_nivel * 2);
             }
-            else if(world_config.get_snake_length() < 40){
-                fps = 100 + (world_config.get_snake_length() * umbral_nivel); 
-            }else{
-                fps = 215 + (world_config.get_snake_length() * Math.floor(umbral_nivel/2));
+            else if (world_config.get_snake_length() < 40) {
+                fps = 100 + (world_config.get_snake_length() * umbral_nivel);
+            } else {
+                fps = 215 + (world_config.get_snake_length() * Math.floor(umbral_nivel / 2));
             }
-   
+
             let v = 320 - fps;
             return v;
         };
@@ -156,7 +156,55 @@
             draw();
 
             if (world_config.can_play() == true) {
-                window.setTimeout(process_frame, interval());
+                if (world_config.get_snake_length() == world_size * world_size) {
+                    var div = document.body.appendChild(document.createElement("div"));
+                    div.style.alignContent = "center";
+                    div.style.position = "absolute";
+                    div.style.border = "1px 1px 1px 1px black";
+                    div.style.background = "white";
+                    div.style.height = "100%";
+                    div.style.width = "100%";
+                    div.style.top = "0";
+                    div.style.left = "0";
+                    div.style.display = "flex";
+                    div.style.flexWrap = "wrap";
+                    div.style.fontFamily = "Courier New', Courier, monospace";
+                    div.style.fontSize = "24pt";
+                    div.style.fontWeight = "bolder"
+                    div.style.placeContent = "center";
+                    var msg = div.appendChild(document.createElement("span"));
+                    msg.style.alignContent = "center";
+                    msg.style.textAlign = "center";
+                    msg.style.width = "100%";
+                    msg.textContent = "Has ganado el juego";
+                    var score = div.appendChild(document.createElement("span"));
+                    score.style.alignContent = "center";
+                    score.style.textAlign = "center";
+                    score.style.width = "100%";
+                    score.textContent = "Score: " + world_config.get_score() + " Max Score: " + max_score;
+
+                    var btn = div.appendChild(document.createElement("button"));
+                    btn.textContent = "Nuevo Juego";
+                    btn.style.display = "flow";
+                    btn.style.position = "relative";
+                    btn.style.height = "50%";
+                    btn.style.width = "50%";
+                    btn.style.backgroundColor = "#EBFDFF";
+                    btn.style.fontFamily = "Courier New', Courier, monospace";
+                    btn.style.fontSize = "34pt";
+                    btn.style.fontWeight = "bolder"
+
+                    btn.onclick = (e) => {
+                        world_config.reset_world(world_size, snake_size);
+                        draw();
+                        var parent = e.target.parentElement;
+                        document.body.removeChild(parent);
+                        window.setTimeout(process_frame, interval());
+                    };
+                }
+                else {
+                    window.setTimeout(process_frame, interval());
+                }
             } else {
                 var div = document.body.appendChild(document.createElement("div"));
                 div.style.alignContent = "center";
